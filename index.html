@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Instagram Follower Challenge</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #833ab4, #fd1d1d, #fcb045);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Custom Cursor */
+        body:hover {
+            cursor: none;
+        }
+
+        .cursor {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #fff;
+            border-radius: 50%;
+            position: absolute;
+            pointer-events: none;
+            transition: all 0.1s ease;
+            z-index: 9999;
+        }
+
+        .cursor.grow {
+            transform: scale(2);
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Container */
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 2.5rem;
+            border-radius: 30px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            max-width: 500px;
+            width: 90%;
+            animation: float 3s ease-in-out infinite;
+            position: relative;
+            z-index: 1;
+        }
+
+        h1 {
+            color: #fff;
+            font-size: 2rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            margin-bottom: 1.5rem;
+            text-shadow: 0 0 10px rgba(253, 29, 29, 0.7), 0 0 20px rgba(252, 176, 69, 0.5);
+        }
+
+        p {
+            font-size: 1.2rem;
+            color: #fff;
+            margin: 1rem 0;
+            text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+        }
+
+        .input-section {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        input {
+            padding: 1rem;
+            font-size: 1.1rem;
+            border: none;
+            border-radius: 50px;
+            background: rgba(255, 255, 255, 0.2);
+            color: #fff;
+            box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.1);
+            outline: none;
+            transition: all 0.4s ease;
+        }
+
+        input::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        input:focus {
+            background: rgba(255, 255, 255, 0.3);
+            box-shadow: 0 0 15px rgba(253, 29, 29, 0.5);
+            transform: scale(1.05);
+        }
+
+        button {
+            padding: 1rem 2rem;
+            font-size: 1.1rem;
+            background: linear-gradient(45deg, #fd1d1d, #fcb045);
+            color: #fff;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            box-shadow: 0 5px 15px rgba(253, 29, 29, 0.4);
+            transition: all 0.3s ease;
+        }
+
+        button:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 10px 25px rgba(252, 176, 69, 0.6);
+        }
+
+        button:active {
+            transform: translateY(2px);
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        #feedback {
+            color: #fff;
+            font-weight: 700;
+            font-size: 1.3rem;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+            animation: pulse 1s infinite;
+        }
+
+        #secret-code {
+            color: #fff;
+            font-size: 1.4rem;
+            background: linear-gradient(45deg, #28a745, #34d058);
+            padding: 0.8rem;
+            border-radius: 15px;
+            margin-top: 1.5rem;
+            box-shadow: 0 0 20px rgba(40, 167, 69, 0.7);
+            animation: glow 2s ease-in-out infinite;
+        }
+
+        #game-section {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        /* Particle Background */
+        #particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+
+        /* Animations */
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 0 20px rgba(40, 167, 69, 0.7); }
+            50% { box-shadow: 0 0 30px rgba(40, 167, 69, 1); }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 400px) {
+            .container {
+                padding: 1.5rem;
+            }
+            h1 {
+                font-size: 1.6rem;
+            }
+            p, input, button {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="particles"></div>
+    <div class="cursor" id="cursor"></div>
+    <div class="container">
+        <h1>🎉 Instagram Follower Challenge 🎉</h1>
+        <p id="welcome">Hey there! What’s your Instagram username?</p>
+        
+        <div id="name-input" class="input-section">
+            <input type="text" id="username" placeholder="Enter your username" autocomplete="off">
+            <button onclick="startGame()">Start Game</button>
+        </div>
+
+        <div id="game-section" class="hidden">
+            <p>Guess my secret number between 1 and 100!</p>
+            <p>Attempts left: <span id="attempts-left">10</span></p>
+            <input type="number" id="guess" placeholder="Your guess" min="1" max="100">
+            <button onclick="checkGuess()">Submit Guess</button>
+            <p id="feedback"></p>
+            <p id="secret-code" class="hidden">Your secret code: <span id="code-value"></span></p>
+            <button id="play-again" class="hidden" onclick="resetGame()">Play Again</button>
+        </div>
+    </div>
+
+    <script>
+        // Game Logic
+        let followerName = '';
+        let secretNumber = Math.floor(Math.random() * 100) + 1;
+        let attempts = 10;
+        const maxAttempts = 10;
+        const secretCode = 'INSTA_LEGEND_2025'; // Updated secret code!
+
+        function startGame() {
+            followerName = document.getElementById('username').value.trim();
+            if (!followerName) {
+                alert('Please enter your Instagram username!');
+                return;
+            }
+
+            document.getElementById('welcome').innerText = `Hey ${followerName}! Can you guess my number?`;
+            document.getElementById('name-input').classList.add('hidden');
+            document.getElementById('game-section').classList.remove('hidden');
+        }
+
+        function checkGuess() {
+            const guess = parseInt(document.getElementById('guess').value);
+            const feedback = document.getElementById('feedback');
+            const attemptsLeft = document.getElementById('attempts-left');
+
+            if (isNaN(guess) || guess < 1 || guess > 100) {
+                feedback.innerText = 'Please enter a number between 1 and 100!';
+                return;
+            }
+
+            attempts--;
+            attemptsLeft.innerText = attempts;
+
+            if (guess < secretNumber) {
+                feedback.innerText = 'Too low! Try again.';
+            } else if (guess > secretNumber) {
+                feedback.innerText = 'Too high! Try again.';
+            } else {
+                feedback.innerText = `🎉 Boom! You got it in ${maxAttempts - attempts} attempts!`;
+                document.getElementById('secret-code').classList.remove('hidden');
+                document.getElementById('code-value').innerText = secretCode;
+                document.getElementById('play-again').classList.remove('hidden');
+                document.getElementById('guess').disabled = true;
+                document.querySelector('button[onclick="checkGuess()"]').disabled = true;
+                confettiEffect();
+            }
+
+            if (attempts === 0) {
+                feedback.innerText = `⏰ Game Over! My number was ${secretNumber}.`;
+                document.getElementById('play-again').classList.remove('hidden');
+                document.getElementById('guess').disabled = true;
+                document.querySelector('button[onclick="checkGuess()"]').disabled = true;
+            }
+
+            document.getElementById('guess').value = '';
+        }
+
+        function resetGame() {
+            secretNumber = Math.floor(Math.random() * 100) + 1;
+            attempts = maxAttempts;
+            document.getElementById('attempts-left').innerText = attempts;
+            document.getElementById('feedback').innerText = '';
+            document.getElementById('secret-code').classList.add('hidden');
+            document.getElementById('play-again').classList.add('hidden');
+            document.getElementById('guess').disabled = false;
+            document.querySelector('button[onclick="checkGuess()"]').disabled = false;
+        }
+
+        // Custom Cursor
+        const cursor = document.getElementById('cursor');
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.left = `${e.clientX - 10}px`;
+            cursor.style.top = `${e.clientY - 10}px`;
+        });
+
+        document.querySelectorAll('button, input').forEach(el => {
+            el.addEventListener('mouseenter', () => cursor.classList.add('grow'));
+            el.addEventListener('mouseleave', () => cursor.classList.remove('grow'));
+        });
+
+        // Particle Animation
+        const particlesContainer = document.getElementById('particles');
+        function createParticle() {
+            const particle = document.createElement('div');
+            particle.style.position = 'absolute';
+            particle.style.width = `${Math.random() * 5 + 2}px`;
+            particle.style.height = particle.style.width;
+            particle.style.background = `rgba(255, 255, 255, ${Math.random() * 0.5 + 0.2})`;
+            particle.style.borderRadius = '50%';
+            particle.style.left = `${Math.random() * 100}vw`;
+            particle.style.top = `${Math.random() * 100}vh`;
+            particle.style.animation = `move ${Math.random() * 5 + 2}s linear infinite`;
+            particlesContainer.appendChild(particle);
+
+            setTimeout(() => particle.remove(), 7000);
+        }
+
+        setInterval(createParticle, 200);
+
+        const styleSheet = document.createElement('style');
+        styleSheet.textContent = `
+            @keyframes move {
+                0% { transform: translateY(0) scale(1); opacity: 1; }
+                100% { transform: translateY(-100vh) scale(0.5); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(styleSheet);
+
+        // Confetti Effect on Win
+        function confettiEffect() {
+            for (let i = 0; i < 50; i++) {
+                const confetti = document.createElement('div');
+                confetti.style.position = 'absolute';
+                confetti.style.width = '10px';
+                confetti.style.height = '10px';
+                confetti.style.background = `hsl(${Math.random() * 360}, 100%, 50%)`;
+                confetti.style.left = `${Math.random() * 100}vw`;
+                confetti.style.top = `${Math.random() * 100}vh`;
+                confetti.style.animation = `confetti ${Math.random() * 2 + 1}s ease-out`;
+                document.body.appendChild(confetti);
+
+                setTimeout(() => confetti.remove(), 3000);
+            }
+
+            const confettiStyle = document.createElement('style');
+            confettiStyle.textContent = `
+                @keyframes confetti {
+                    0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+                    100% { transform: translateY(100vh) rotate(${Math.random() * 720}deg); opacity: 0; }
+                }
+            `;
+            document.head.appendChild(confettiStyle);
+        }
+    </script>
+</body>
+</html>
